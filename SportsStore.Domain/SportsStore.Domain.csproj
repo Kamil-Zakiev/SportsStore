@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Abstract\IProductsRepository.cs" />
     <Compile Include="Concrete\NHProductsRepository.cs" />
+    <Compile Include="Entities\Cart.cs" />
     <Compile Include="Entities\Product.cs" />
     <Compile Include="Maps\ProductMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

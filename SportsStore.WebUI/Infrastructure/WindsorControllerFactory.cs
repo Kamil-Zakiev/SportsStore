@@ -38,7 +38,8 @@
         {
             _container.Register(Component.For<IProductsRepository>().ImplementedBy<NHProductsRepository>().LifestylePerWebRequest());
             _container.Register(Component.For<ProductController>().ImplementedBy<ProductController>().LifestylePerWebRequest());
-            _container.Register(Component.For<NavController>().ImplementedBy<NavController>().LifestylePerWebRequest());            
+            _container.Register(Component.For<NavController>().ImplementedBy<NavController>().LifestylePerWebRequest());
+            _container.Register(Component.For<CartController>().ImplementedBy<CartController>().LifestylePerWebRequest());
         }
     }
 }
