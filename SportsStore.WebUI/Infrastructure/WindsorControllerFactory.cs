@@ -9,6 +9,7 @@
     using SportsStore.WebUI.Controllers;
     using NHibernate;
     using SportsStore.Domain.Concrete;
+    using System.Configuration;
 
     public class WindsorControllerFactory : DefaultControllerFactory
     {
@@ -39,7 +40,17 @@
             _container.Register(Component.For<IProductsRepository>().ImplementedBy<NHProductsRepository>().LifestylePerWebRequest());
             _container.Register(Component.For<ProductController>().ImplementedBy<ProductController>().LifestylePerWebRequest());
             _container.Register(Component.For<NavController>().ImplementedBy<NavController>().LifestylePerWebRequest());
-            _container.Register(Component.For<CartController>().ImplementedBy<CartController>().LifestylePerWebRequest());
+            _container.Register(Component.For<CartController>().ImplementedBy<CartController>().LifestyleTransient());
+
+
+            _container.Register(Component.For<IOrderProcessor>().UsingFactoryMethod(k =>
+            {
+                var emailSettings = new EmailSettings
+                {
+                    WriteAsFile = bool.Parse(ConfigurationManager.AppSettings["Email.WriteAsFile"] ?? "false")
+                };
+                return new EmailOrderProcessor(emailSettings);
+            }).LifestyleSingleton());
         }
     }
 }
