@@ -6,6 +6,8 @@
     using System.Web.Routing;
     using Infrastructure;
     using NHibernateConfig;
+    using SportsStore.WebUI.Binders;
+    using SportsStore.Domain.Entities;
 
     public class MvcApplication : HttpApplication
     {
@@ -19,6 +21,7 @@
 
             var sessionFactory = NHibernateConfiguration.CreateFactory();
             ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(sessionFactory));
+            ModelBinders.Binders.Add(typeof(Cart), new CartModelBinder());
         }
     }
 }

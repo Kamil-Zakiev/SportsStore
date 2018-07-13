@@ -1,10 +1,7 @@
 ﻿using SportsStore.Domain.Abstract;
 using SportsStore.Domain.Entities;
 using SportsStore.WebUI.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace SportsStore.WebUI.Controllers
@@ -13,46 +10,35 @@ namespace SportsStore.WebUI.Controllers
     {
         public IProductsRepository ProductsRepository { get; set; }
 
-        public ActionResult AddToCart(long id, string returnUrl)
+        public ActionResult AddToCart(Cart cart, long id, string returnUrl)
         {
             var product = ProductsRepository.Products.SingleOrDefault(p => p.Id == id);
             if (product != null)
             {
-                GetCart().AddItem(product, 1);
+                cart.AddItem(product, 1);
             }
 
             return RedirectToAction("Index", new { returnUrl });
         }
 
-        public RedirectToRouteResult RemoveFromCart(int id, string returnUrl)
+        public RedirectToRouteResult RemoveFromCart(Cart cart, int id, string returnUrl)
         {
             var product = ProductsRepository.Products.SingleOrDefault(p => p.Id == id);
             if (product != null)
             {
-                GetCart().RemoveItem(product);
+                cart.RemoveItem(product);
             }
+
             return RedirectToAction("Index", new { returnUrl });
         }
 
-        public ViewResult Index(string returnUrl)
+        public ViewResult Index(Cart cart, string returnUrl)
         {
             return View(new CartIndexViewModel
             {
-                Cart = GetCart(),
+                Cart = cart,
                 ReturnUrl = returnUrl
             });
-        }
-
-        private Cart GetCart()
-        {
-            var cart = (Cart)Session["Cart"];
-            if (cart == null)
-            {
-                cart = new Cart();
-                Session["Cart"] = cart;
-            }
-
-            return cart;
         }
     }
 }
