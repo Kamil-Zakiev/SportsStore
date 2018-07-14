@@ -19,6 +19,8 @@ namespace SportsStore.Domain.Maps
             Property(p => p.Price, m => m.Column("price"));
             Property(p => p.Category, m => m.Column("category"));
             Property(p => p.Description, m => m.Column("description"));
+            Property(p => p.ImageData, m => m.Column("image_data"));
+            Property(p => p.ImageMimeType, m => m.Column("image_mime_type"));
         }
     }
 }

@@ -3,6 +3,7 @@
     using SportsStore.Domain.Abstract;
     using SportsStore.Domain.Entities;
     using System.Linq;
+    using System.Web;
     using System.Web.Mvc;
 
     [Authorize]
@@ -36,10 +37,17 @@
         }
 
         [HttpPost]
-        public ActionResult Edit(Product product)
+        public ActionResult Edit(Product product, HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
             {
+                if (image != null)
+                {
+                    product.ImageMimeType = image.ContentType;
+                    product.ImageData = new byte[image.ContentLength];
+                    image.InputStream.Read(product.ImageData, 0, image.ContentLength);
+                }
+
                 if (product.Id == 0)
                 {
                     ProductsRepository.Save(product);
@@ -54,6 +62,8 @@
                 persistedProduct.Description = product.Description;
                 persistedProduct.Category = product.Category;
                 persistedProduct.Price = product.Price;
+                persistedProduct.ImageData = product.ImageData;
+                persistedProduct.ImageMimeType = product.ImageMimeType;
                 
                 ProductsRepository.Update(persistedProduct);
                 TempData["message"] = $"{product.Name} has been updated";

@@ -21,5 +21,10 @@ namespace SportsStore.Domain.Entities
 
         [Required(ErrorMessage = "Please specify a category")]
         public virtual string Category { get; set; }
+
+        public virtual byte[] ImageData { get; set; }
+
+        [HiddenInput(DisplayValue = false)]
+        public virtual string ImageMimeType { get; set; }
     }
 }
