@@ -10,6 +10,8 @@
     using NHibernate;
     using SportsStore.Domain.Concrete;
     using System.Configuration;
+    using SportsStore.WebUI.Infrastructure.Abstract;
+    using SportsStore.WebUI.Infrastructure.Concrete;
 
     public class WindsorControllerFactory : DefaultControllerFactory
     {
@@ -37,12 +39,10 @@
 
         private void AddBindings()
         {
-            _container.Register(Component.For<IProductsRepository>().ImplementedBy<NHProductsRepository>().LifestylePerWebRequest());
-            _container.Register(Component.For<ProductController>().ImplementedBy<ProductController>().LifestylePerWebRequest());
-            _container.Register(Component.For<NavController>().ImplementedBy<NavController>().LifestylePerWebRequest());
-            _container.Register(Component.For<AdminController>().ImplementedBy<AdminController>().LifestylePerWebRequest());
-            _container.Register(Component.For<CartController>().ImplementedBy<CartController>().LifestyleTransient());
+            RegisterControllers();
 
+            _container.Register(Component.For<IProductsRepository>().ImplementedBy<NHProductsRepository>().LifestylePerWebRequest());
+            _container.Register(Component.For<IAuthProvider>().ImplementedBy<FormsAuthProvider>().LifestyleSingleton());
 
             _container.Register(Component.For<IOrderProcessor>().UsingFactoryMethod(k =>
             {
@@ -52,6 +52,15 @@
                 };
                 return new EmailOrderProcessor(emailSettings);
             }).LifestyleSingleton());
+        }
+
+        private void RegisterControllers()
+        {
+            _container.Register(Component.For<ProductController>().ImplementedBy<ProductController>().LifestylePerWebRequest());
+            _container.Register(Component.For<NavController>().ImplementedBy<NavController>().LifestylePerWebRequest());
+            _container.Register(Component.For<AdminController>().ImplementedBy<AdminController>().LifestylePerWebRequest());
+            _container.Register(Component.For<AccountController>().ImplementedBy<AccountController>().LifestylePerWebRequest());
+            _container.Register(Component.For<CartController>().ImplementedBy<CartController>().LifestyleTransient());            
         }
     }
 }
